@@ -1,116 +1,117 @@
 #include <iostream>
 #include <windows.h>
+#include <vector>
 #include <random>
-#include <ctime>
 #include <string>
+#include <ctime>
+#include <chrono>
 
-void ta(std::string text) {
-	for (int i = 0; i < text.length(); i++) {
-		std::cout << text[i];
-		if (text[i] == ',') {
-			Sleep(500);
-		}
-		else if (text[i] == '.') {
-			Sleep(700);
-		}
-		else{ Sleep(5); }
-	}
-	text.clear();
+int date_difference(int day1, int month1, int year1, int day2, int month2, int year2) {
+	std::tm date1{};
+	date1.tm_year = year1 - 1900;
+	date1.tm_mon = month1 - 1;
+	date1.tm_mday = day1;
+	
+	std::tm date2{};
+	date2.tm_year = year2 - 1900;
+	date2.tm_mon = month2 - 1;
+	date2.tm_mday = day2;
+
+
+	auto point1 = std::chrono::system_clock::from_time_t(std::mktime(&date1));
+	auto point2 = std::chrono::system_clock::from_time_t(std::mktime(&date2));
+	
+	auto difference = std::chrono::duration_cast<std::chrono::hours>(point2 - point1);
+	return difference.count() / 24;
 }
 
 
 
+void task_1(){
+	int date1[3], date2[3];
+	std::cout << "Enter the first date day\t: ";
+	std::cin >> date1[0];
+	std::cout << "Enter the first date month\t: ";
+	std::cin >> date1[1];
+	std::cout << "Enter the first date year\t: ";
+	std::cin >> date1[2];
+	std::cout << "\n\n=====-----------------===>\n\n";
+	std::cout << "Enter the second date day\t: ";
+	std::cin >> date2[0];
+	std::cout << "Enter the second date month\t: ";
+	std::cin >> date2[1];
+	std::cout << "Enter the second date year\t: ";
+	std::cin >> date2[2];
+	system("cls");
+	std::cout << "Difference between date ["
+		<< date1[0] << "." << date1[1] << "." << date1[2] << "] and date ["
+		<< date2[0] << "." << date2[1] << "." << date2[2] << "] is "
+		<< date_difference(date1[0], date1[1], date1[2], date2[0], date2[1], date2[2]) << " days\n\n";
+}
 
 
-int main() {
-	bool process_ended = false;
-	int choice = 0;
-	do {
-		ta("Choose the homework:\n\n1 - Convertor[work in progress]\n2 - [blank]\n3 - [blank]\n0 - Terminate process\n\n>>> ");
-		std::cin >> choice;
+void task_2() {
+	const int array_size = 10;
+	float array_numbers[array_size]{1,2,3,4,5,6,7,8,9,10}, value1 = 0;
+	std::cout << "Array to solve: [";
+	for (int i = 0; i < array_size; i++) {
+		std::cout << array_numbers[i];
+		value1 += array_numbers[i];
+		if (i < array_size - 1) {
+			std::cout << ", ";
+		}
+	}
+	std::cout << "]";
+	std::cout << "\nTotal sum:\t" << value1;
+	value1 = value1 / array_size;
+	std::cout << "\nAnswer:\t\t" << value1;
+}
+
+
+
+void task_3() {
+	int* array_size = new int(0), *positive = new int(0), *neutral = new int(0), *negative = new int(0);
+	std::cout << "Enter the list size: ";
+	std::cin >> *array_size;
+	float* dynamic_array = new float[*array_size];
+	system("cls");
+	for (int i = 0; i < *array_size; i++) {		
+		std::cout << " [" << i + 1 << "/" << *array_size << "] := ";
+		std::cin >> dynamic_array[i];
 		system("cls");
-	} while (choice < 0 || choice > 3);
-	if (choice == 0) {
-		return 0;
 	}
-	else if (choice == 1) {
-		bool deal = false;
-		double Dollar = 96.75, Euro = 106.19, Yuan = 13.7, Farit = 37, Yen = 0.65, Rouble = 0,
-			Volutes[5]{}, amount_to_buy = 0, comission = 0, spent = 0, gain = 0, comission_ate = 0;
-		std::string type_o_volute = "blank";
-
-		Volutes[0] = Dollar;
-		Volutes[1] = Euro;
-		Volutes[2] = Yuan;
-		Volutes[3] = Farit;
-		Volutes[4] = Yen;
-
-
-		do {ta("Enter the amount of roubles you want to convert\n\n>>> ");
-			std::cin >> Rouble;
-			system("cls");} while (Rouble < 0);
-
-			do {
-				do {
-					ta("What do you want to convert rubles into?\n\n1 - Dollar\n2 - Euro\n3 - Yuan\n4 - Farit\n5 - Yen\n\n>>> ");
-					std::cin >> choice;
-					system("cls");
-					if (choice < 1 || choice > 5) {
-						ta("You got out of the list, please, enter the valid value\n\n");
-						Sleep(700);
-					}
-				} while (choice < 1 || choice > 5);
-				
-				amount_to_buy = Rouble / Volutes[choice - 1];
-				comission = amount_to_buy * 0.05;
-				if (choice == 1) { type_o_volute = "Dollar"; }
-				if (choice == 2) { type_o_volute = "Euro"; }
-				if (choice == 3) { type_o_volute = "Yuan"; }
-				if (choice == 4) { type_o_volute = "Farit"; }
-				if (choice == 5) { type_o_volute = "Yen"; }
-
-
-				ta("Amount of Roubles you have\t\t- ");
-				std::cout << Rouble << std::endl << std::endl;
-				ta("Volute selected\t\t\t\t- ");
-				std::cout << type_o_volute << std::endl;
-				ta("Current cost[in roubles]\t\t- ");
-				std::cout << Volutes[choice - 1] << std::endl;
-				ta("Amount of volute you can buy[com off]\t- ");
-				std::cout << amount_to_buy << std::endl;
-				ta("Comission\t\t\t\t- ");
-				std::cout << comission << std::endl;
-				ta("\nTotal amount of cash\nyou'll get with comission\t\t- ");
-				std::cout << amount_to_buy - comission << std::endl;
-				ta("\nDeal?\n1 - Confirm\n2 - Decline\n\n>>> ");
-				std::cin >> choice;
-				system("cls");
-				if (choice == 1) {
-					ta("Deal confirmed, now you\n");
-					while (true) {
-						gain += amount_to_buy - comission;
-						spent += Rouble;
-						comission_ate += comission;
-						std::cout << "- Gained " << gain << " " << type_o_volute << "s\n";
-						std::cout << "- Spent " << spent << " Roubles\n";
-						ta("\n- Comission \"ate\" ");
-						std::cout << comission_ate <<" Roubles in total\n\n";
-						ta("Would you like to repeat the operation?\n\n1 - yes\n2 - no\n>>> ");
-						std::cin >> choice;
-						if (choice == 1) {
-							system("cls");
-							ta("Deal repeated, now you\n");
-						}
-						else { return 0; }
-					}
-				}
-			} while (process_ended = true);
+	std::cout << "Array to count: [";
+	for (int i = 0; i < *array_size; i++) {
+		std::cout << dynamic_array[i];
+		if (dynamic_array[i] < 0) { *negative += 1; }
+		else if (dynamic_array[i] > 0) { *positive += 1; }
+		else if (dynamic_array[i] == 0) { *neutral += 1; }
+		if (i < *array_size - 1) {std::cout << ", ";}
 	}
-	else if (choice == 2) {
-		return 0;
+	std::cout << "]\n\nPositive numbers: "<< *positive<<"\nNegative numbers: "<<*negative
+		<<"\nNeutral numbers: "<<*neutral;
+
+	
+
+}
+
+
+int main(){
+	int task_choice = -1;
+	do { system("cls"); 
+	std::cout << "Tasks avialable:\n1 - difference between dates\n2 - Mid number\n3 - Positive|zero|negative\nEnter the task number: ";
+	std::cin >> task_choice; } while (task_choice < 1 || task_choice > 3);
+	system("cls");
+	if (task_choice == 1) {
+		task_1();
 	}
-	else if (choice == 3) {
-		return 0;
+	else if (task_choice == 2) {
+		task_2();
 	}
+	else if (task_choice == 3) {
+		task_3();
+	}
+	std::cout << "\n\n\n";
+	
 	return 0;
 }
